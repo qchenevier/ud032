@@ -42,16 +42,26 @@ def process_file(f):
     data = []
     info = {}
     info["courier"], info["airport"] = f[:6].split("-")
-    
+
     with open("{}/{}".format(datadir, f), "r") as html:
-
-        soup = BeautifulSoup(html)
-
+        soup = BeautifulSoup(html, 'html.parser')
+        table_lines = soup.find('table', class_='dataTDRight').find_all('tr', class_='dataTDRight')[:-1]
+        for line in table_lines:
+            line_data = [int(cell.text.replace(',', '')) for cell in line.find_all('td')]
+            data.append({
+                'courier': info['courier'],
+                'airport': info['airport'],
+                'year': line_data[0],
+                'month': line_data[1],
+                'flights': {
+                    'domestic': line_data[2],
+                    'international': line_data[3],
+                }
+            })
     return data
 
 
 def test():
-    print "Running a simple test..."
     open_zip(datadir)
     files = process_all(datadir)
     data = []
@@ -63,7 +73,8 @@ def test():
         assert type(entry["flights"]["domestic"]) == int
         assert len(entry["airport"]) == 3
         assert len(entry["courier"]) == 2
-    print "... success!"
 
 if __name__ == "__main__":
     test()
+
+test()

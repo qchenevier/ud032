@@ -23,9 +23,13 @@ DATAFILE = "745090.csv"
 def parse_file(datafile):
     name = ""
     data = []
-    with open(datafile,'rb') as f:
-        pass
-    # Do not change the line below
+    with open(datafile,'r') as f:
+        reader = csv.reader(f, delimiter=',')
+        metadata = next(reader)
+        name = metadata[1]
+        header = next(reader)
+        data = list(reader)
+                
     return (name, data)
 
 
@@ -38,6 +42,8 @@ def test():
     assert data[2][0] == "01/01/2005"
     assert data[2][5] == "2"
 
+
+test()
 
 if __name__ == "__main__":
     test()

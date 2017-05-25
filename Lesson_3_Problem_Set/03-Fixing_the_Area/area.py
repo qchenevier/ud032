@@ -21,10 +21,21 @@ CITIES = 'cities.csv'
 
 
 def fix_area(area):
-
-    # YOUR CODE HERE
-
-    return area
+    import re
+    new_area = None
+    try:
+        new_area = float(area)
+    except:
+        if area and area.startswith('{'):
+            area_strings = area.lstrip('{').rstrip('}').split('|')
+            n_digits = -1
+            for area_string in area_strings:
+                new_n_digits = len(re.search(r'^\d\.\d+e', area_string).group()) - 3
+                if new_n_digits > n_digits:
+                    n_digits = new_n_digits
+                    new_area = float(area_string)
+    print('{} --> {}'.format(area, new_area))
+    return new_area
 
 
 
@@ -37,7 +48,8 @@ def process_file(filename):
 
         #skipping the extra matadata
         for i in range(3):
-            l = reader.next()
+            # l = reader.next()
+            l = next(reader)
 
         # processing file
         for line in reader:
@@ -52,7 +64,6 @@ def process_file(filename):
 def test():
     data = process_file(CITIES)
 
-    print "Printing three example results:"
     for n in range(5,8):
         pprint.pprint(data[n]["areaLand"])
 

@@ -21,15 +21,38 @@ import pprint
 
 CITIES = 'cities.csv'
 
-FIELDS = ["name", "timeZone_label", "utcOffset", "homepage", "governmentType_label", "isPartOf_label", "areaCode", "populationTotal", 
-          "elevation", "maximumElevation", "minimumElevation", "populationDensity", "wgs84_pos#lat", "wgs84_pos#long", 
+FIELDS = ["name", "timeZone_label", "utcOffset", "homepage", "governmentType_label", "isPartOf_label", "areaCode", "populationTotal",
+          "elevation", "maximumElevation", "minimumElevation", "populationDensity", "wgs84_pos#lat", "wgs84_pos#long",
           "areaLand", "areaMetro", "areaUrban"]
 
 def audit_file(filename, fields):
     fieldtypes = {}
 
-    # YOUR CODE HERE
+    for field in fields:
+        with open(CITIES, 'r') as f:
+            reader = csv.DictReader(f)
+            fieldnames = reader.fieldnames
+            next(reader, None)
+            next(reader, None)
+            next(reader, None)
 
+
+            types = []
+            for line in reader:
+                string = line[field]
+                if (string == '') or (string == 'NULL'):
+                    types.append(type(None))
+                elif string.startswith('{'):
+                    types.append(type(list()))
+                else:
+                    try:
+                        types.append(type(int(string)))
+                    except:
+                        try:
+                            types.append(type(float(string)))
+                        except:
+                            types.append(type(string))
+            fieldtypes[field] = set(types)
 
     return fieldtypes
 
@@ -41,6 +64,19 @@ def test():
 
     assert fieldtypes["areaLand"] == set([type(1.1), type([]), type(None)])
     assert fieldtypes['areaMetro'] == set([type(1.1), type(None)])
-    
+
 if __name__ == "__main__":
     test()
+
+
+test()
+
+f = open(CITIES, 'r')
+reader = csv.DictReader(f)
+fieldnames = reader.fieldnames
+next(reader, None)
+next(reader, None)
+next(reader, None)
+
+zou = next(reader)
+zou['name']

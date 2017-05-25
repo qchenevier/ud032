@@ -23,10 +23,13 @@ import pprint
 CITIES = 'cities.csv'
 
 
-def check_loc(point, lat, longi):
-    # YOUR CODE HERE
-    
-    pass
+def check_loc(point, lat, lon):
+    (lat_0, lon_0) = point.split(' ')
+    inconsistency = abs(float(lat) - float(lat_0)) + abs(float(lon) - float(lon_0))
+    if inconsistency > 0:
+        return False
+    else:
+        return True
 
 
 def process_file(filename):
@@ -40,8 +43,8 @@ def process_file(filename):
         for line in reader:
             # calling your function to check the location
             result = check_loc(line["point"], line["wgs84_pos#lat"], line["wgs84_pos#long"])
-            if not result:
-                print "{}: {} != {} {}".format(line["name"], line["point"], line["wgs84_pos#lat"], line["wgs84_pos#long"])
+            # if not result:
+            #     print "{}: {} != {} {}".format(line["name"], line["point"], line["wgs84_pos#lat"], line["wgs84_pos#long"])
             data.append(line)
 
     return data
@@ -53,3 +56,7 @@ def test():
 
 if __name__ == "__main__":
     test()
+
+test()
+
+float([1, 2])

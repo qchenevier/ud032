@@ -20,7 +20,18 @@ def split_file(filename):
     # As a hint - each patent declaration starts with the same line that was causing the error
     # The new files should be saved with filename in the following format:
     # "{}-{}".format(filename, n) where n is a counter, starting from 0.
-
+    import os
+    n = 0
+    new_filename = ''
+    with open(filename, 'r') as f:
+        for line in f:
+            if line.startswith('<?xml'):
+                new_filename = '{}-{}'.format(filename, n)
+                if os.path.exists(new_filename):
+                    os.remove(new_filename)
+                n += 1
+            with open(new_filename, 'a') as new_f:
+                new_f.write(line)
     pass
 
 
